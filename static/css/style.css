@@ -31,6 +31,8 @@ h1, .brand {
     padding: 0 1.5rem;
 }
 
+/* --- Header Section --- */
+
 .site-header {
     border-bottom: 1px solid var(--line);
 }
@@ -59,6 +61,8 @@ h1, .brand {
     text-decoration: none;
     font-size: 0.95rem;
 }
+
+/* --- Hero Section --- */
 
 .hero {
     padding: 4.5rem 0 5rem;
@@ -169,12 +173,55 @@ h1, .brand {
     border: 3px solid var(--ink);
 }
 
+/* --- Experience Section --- */
+
+.experience {
+    padding: 4rem 0;
+}
+
+.experience h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+
+}
+
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.experience-card {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: #fff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card-meta {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent-dark);
+    margin-top: 0.25rem;
+}
+
+.experience-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-dark);
+}
+
+/* --- Footer Section --- */
+
 .site-footer {
     padding: 1.5rem;
     color: var(--text-muted);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
 }
+
+/* --- Media --- */
 
 @media (max-width: 600px) {
     .hero-grid {
@@ -183,6 +230,10 @@ h1, .brand {
             "identity"
             "photo"
             "details";
+    }
+
+    .experience-grid {
+        grid-template-columns: 1fr;
     }
 
     .hero-photo {
