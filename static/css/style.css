@@ -4,13 +4,24 @@
     box-sizing: border-box;
 }
 
+/* the light mode kirigiri palette 
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
+    --ink: #2a2431;         
+    --paper: #f4f1f8;       
+    --accent: #826296;      
+    --accent-dark: #5c3e72; 
+    --line: #d8cedf;        
+    --radius: 4px;          
+} */
+
+/* the dark mode kirigiri palette  */
+:root {
+    --ink: #e9e6ed; 
+    --paper: #120e15;       
+    --accent: #c47b53;     
+    --accent-dark: #8c60a8; 
+    --line: #3a2e46;        
+    --card-bg: #1c1624;     
     --radius: 4px;
 }
 
@@ -157,7 +168,7 @@ h1, .brand {
     left: 1.25rem;
     width: 100%;
     height: 100%;
-    background-color: var(--accent);
+    background-color: var(--accent-dark);
     border-radius: var(--radius);
     z-index: 0;
 }
@@ -170,7 +181,7 @@ h1, .brand {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius);
-    border: 3px solid var(--ink);
+    border: 4px solid var(--ink);
 }
 
 /* --- Experience Section --- */
@@ -195,7 +206,7 @@ h1, .brand {
     padding: 1.5rem;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background-color: #fff;
+    background-color: var(--card-bg);
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
