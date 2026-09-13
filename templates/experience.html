@@ -24,14 +24,14 @@
     <main>
     <section class="experience-section" id="experience">
         <div class="container">
-            <p class="section-kicker">Perjalanan saya sejauh ini</p>
-            <h1>Experience</h1>
+            <p class="section-kicker">experience</p>
+            <h1>what i've been doing!</h1>
 
             <div class="experience-grid">
                 {% for experience in experience_list %}
                     <article class="experience-card">
-                        <span class="experience-category">
-                            {{ experience.get_category_display }}
+                        <span class="card-meta">
+                            {{ experience.category }}
                         </span>
                         <h2>{{ experience.title }}</h2>
                         <p class="experience-description">
@@ -39,14 +39,14 @@
                         </p>
 
                         {% if experience.is_ongoing %}
-                            <p class="experience-status">Sedang berlangsung</p>
+                            <p class="experience-status">Ongoing</p>
                         {% else %}
-                            <p class="experience-status">Selesai</p>
+                            <p class="experience-status">Completed</p>
                         {% endif %}
                     </article>
                 {% empty %}
                     <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
+                        No experiences added yet.
                     </p>
                 {% endfor %}
             </div>
