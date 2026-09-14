@@ -14,3 +14,24 @@ Kelas : PBP C
 - for this assignment, early on, i used gemini to reverse-engineer the code given from Tutorial 1 and teach me about everything i need to know about both html and css.
 - i spent a decent amount of time trying to imagine the structure of the web visuals, but honestly, i haven't gotten that familiar with the syntax and rules so i had to prompt gemini to turn my visual ideas into actual syntax i can use for my html and css files.
 - other than that, all visual choices and aesthetics, such as color palette, text capitalization, visual blocks (cards for experience, pills for skills), was all from my ideas.
+
+
+### Tugas 2 Reflective Questions
+
+1. Explain what happens when a user opens the new portfolio page, starting from the request received by the project until the data appears in the browser. In your answer, explain the roles of the project’s urls.py, the application’s urls.py, the view, the model, and the template.
+    
+    Let's say a user opens the new portfolio page, coming through section /education/. The project's urls.py will intercept the request and see that it belongs to the main app, and passes the request to main's urls.py. From here, main's urls.py sees the request asking for the /education/ path, so then it runs the show_education function which is in views.py of main. In views.py, show_education returns a render of the context (that's in the function itself!), towards the education.html page. Also, there is a "education_list": Education.objects.all() in that context block, which refers to the Education object in models.py! In models.py we hardcode what fields or information an object has. Anyways 'Education.objects.all()' basically goes to our local database (for now) and returns all Educations objects that we initialized using the shell, which will be showcased in the education.html page where the 'design' is already hardcoded using django logic to build the final visual structure. Finally, the finished html is shown to the user!
+
+
+2. Why should the data for the new portfolio section be stored in a model instead of being written directly in the template? Explain how this choice affects application maintenance and future development.
+    
+    So, I think that the data should be stored in a model because writing it directly in the template will be annoying when you decide to edit, add, or delete the specific data mentioned. Waste of time and energy, basically. So, putting them in a model is better because changing stuffs won't need you to change the template! The template's job is to look good and clean, not hold data that clings onto design.
+
+3. What is the difference between makemigrations and migrate in Django? Give an example of a model change that requires you to run both commands.
+
+    By looking at the terminal when I did these two lines, I realize that makemigrations is usually used after I make new objects in models.py. When I run it, it seems like it reads what I've done to models.py, and prepares some instructions for the next line, which is migrate, for migrate to apply those instructions to the physical database!
+
+### Tugas 2 AI Usage
+For this assignment, I used Gemini again to help me deal with the design conflict of Assignment 1 when I was doing Tutorial 2. Tutorial 2 had me creating an experience section that I had made for Assignment 1. The problem was that there were CSS lines that were redundant and it made the CSS lines I wrote for Assignment 1 for the experience section be overwritten by the tutorial.
+
+Other than that, I also asked Gemini for help understanding how Django MVT works, from what to do when creating the new objects in models.py, how views.py correlate to the template html files, and a refresher on unit testing, but Django.
