@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience - {{ name }} </title>
+    <title>Education - {{ name }} </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -22,23 +22,23 @@
     </header>
 
     <main>
-    <section class="experience-section" id="experience">
+    <section class="experience-section" id="education">
         <div class="container">
-            <p class="section-kicker">experience</p>
-            <h1>what i've been doing!</h1>
+            <p class="section-kicker">education</p>
+            <h1>where i've been studying!</h1>
 
             <div class="experience-grid">
-                {% for experience in experience_list %}
+                {% for education in education_list %}
                     <article class="experience-card">
                         <span class="card-meta">
-                            {{ experience.category }}
+                            {{ education.degree }}
                         </span>
-                        <h2>{{ experience.title }}</h2>
+                        <h2>{{ education.institution }}</h2>
                         <p class="experience-description">
-                            {{ experience.description }}
+                            {{ education.description }}
                         </p>
 
-                        {% if experience.is_ongoing %}
+                        {% if education.is_ongoing %}
                             <p class="experience-status">Ongoing</p>
                         {% else %}
                             <p class="experience-status">Completed</p>
@@ -46,13 +46,13 @@
                     </article>
                 {% empty %}
                     <p class="empty-state">
-                        No experiences added yet.
+                        No education history added yet.
                     </p>
                 {% endfor %}
             </div>
         </div>
     </section>
-</main>
+    </main>
 
     <footer class="site-footer">
         <div class="container">
