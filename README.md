@@ -4,6 +4,9 @@ NPM : 2506592743
 
 Kelas : PBP C
 
+PWS Website: https://deandra-sulthan-myportfolio.pws.cs.ui.ac.id
+# i purposefully chose to write "portfolio" instead of "portofolio" for this individual project to stay consistent with the english language.
+
 ### Tugas 1 Reflective Questions
 
 1. yes, i specifically used <section>. i used it to split the three sections i've made: #profile (#hero), #experience, and #skills. using <section> is great because it makes the overall .html structure look clean, visually splitting each section so it's easier for me to read and write compared to just using <div>
