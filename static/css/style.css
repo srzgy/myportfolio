@@ -295,6 +295,9 @@ h1, .brand {
 .experience-image {
     display: block;
     width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    object-position: center;
     height: auto;
     border: 1px solid black;
     border-radius: var(--radius);
