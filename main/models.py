@@ -25,6 +25,7 @@ class Education(models.Model):
     institution = models.CharField(max_length = 255)
     degree = models.CharField(max_length=255)
     description = models.TextField()
+    thumbnail = models.URLField(blank=True, null=True)
     started_at = models.DateField(auto_now_add=True)
     ended_at = models.DateField(blank=True, null=True)
 

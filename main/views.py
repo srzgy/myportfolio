@@ -10,7 +10,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from main.forms import ExperienceForm
+from main.forms import ExperienceForm, EducationForm
 
 
 def show_main(request):
@@ -38,7 +38,7 @@ def show_experience(request):
     context = {
         "name": "Deandra Yudasswara",
         "experience_list": experiences,
-        "title_query": title_query,
+        "title_query": title_query
     }
     return render(request, "experience.html", context)
 
@@ -83,3 +83,58 @@ def get_experiences_json(request):
 
     experiences_json = serializers.serialize("json", experiences)
     return HttpResponse(experiences_json, content_type = "application/json")
+
+def get_educations_json(request):
+    title_query = request.GET.get("institution", "").strip()
+    educations = Education.objects.all()
+
+    # filtering by institution name
+    if title_query:
+        educations = educations.filter(institution__icontains=title_query)
+
+    educations_json = serializers.serialize("json", educations)
+    return HttpResponse(educations_json, content_type="application/json")
+
+
+def show_education(request):
+    json_response = get_educations_json(request)
+
+    educations = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    educations = [education.object for education in educations]
+    title_query = request.GET.get("institution", "").strip()
+
+    context = {
+        "name": "Deandra Yudasswara",
+        "education_list": educations,
+        "title_query": title_query,
+    }
+    return render(request, "education.html", context)
+
+
+def create_education(request):
+    form = EducationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "new education added!")
+        return redirect("main:show_education")
+
+    context = {
+        "name": "Deandra Yudasswara",
+        "form": form,
+    }
+    return render(request, "education_form.html", context)
+
+
+def delete_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        education.delete()
+        messages.success(request, "education successfully deleted.")
+        return redirect("main:show_education")
+
+    return redirect("main:show_education")

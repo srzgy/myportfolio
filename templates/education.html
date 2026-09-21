@@ -9,11 +9,25 @@
         <section class="experience-section" id="education">
             <div class="container">
                 <p class="section-kicker">education</p>
-                <h1>where i've been studying!</h1>
+
+                <div class="experience-header">
+                    <h1>where i've been studying!</h1>
+                        <a href="{% url 'main:create_education' %}" class="button experience-add-button">
+                            <span aria-hidden="true">+</span> Add Education
+                        </a>
+                </div>
+
+                <form method="get" action="{% url 'main:show_education' %}" class="experience-search">
+                    <input type="search" name="institution" value="{{ title_query }}" placeholder="Search education..." class="experience-search__input">
+                    <button type="submit" class="button">Search</button>
+                </form>
 
                 <div class="experience-grid">
                     {% for education in education_list %}
                         <article class="experience-card">
+                            {% if education.thumbnail %}
+                                <img src="{{ education.thumbnail }}" alt="Image for {{ education.institution }}" class="experience-image">
+                            {% endif %}
                             <span class="card-meta">
                                 {{ education.degree }}
                             </span>
@@ -22,11 +36,17 @@
                                 {{ education.description }}
                             </p>
 
-                            {% if education.is_ongoing %}
-                                <p class="experience-status">Ongoing</p>
-                            {% else %}
-                                <p class="experience-status">Completed</p>
-                            {% endif %}
+                            <div class="experience-card-actions">
+                                <div class="experience-actions">
+                                    {% if education.is_ongoing %}
+                                        <p class="experience-status">Ongoing</p>
+                                    {% else %}
+                                        <p class="experience-status">Completed</p>
+                                    {% endif %}
+
+                                    {% include "components/education_delete_modal.html" with education=education %}
+                                </div>
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">

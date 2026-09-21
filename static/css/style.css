@@ -405,6 +405,7 @@ h1, .brand {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+    color: var(--ink)
 }
 
 .experience-delete-modal__content h2 {
@@ -464,6 +465,7 @@ h1, .brand {
         width: 100%;
         padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
+        color: var(--ink)
     }
 
     .experience-delete-modal__actions {
@@ -579,6 +581,7 @@ h1, .brand {
 
 .button-secondary {
     background: var(--ink);
+    color: var(--paper);
 }
 
 
