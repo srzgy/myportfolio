@@ -7,9 +7,11 @@ from main.views import (
     create_experience, 
     get_experiences_json, 
     delete_experience,
+    edit_experience,
     show_education,
     create_education,
     delete_education,
+    edit_education,
     get_educations_json,
 )
 app_name = "main"
@@ -21,10 +23,12 @@ urlpatterns = [
     path("experience/add/", create_experience, name="create_experience"),
     path("api/experience/", get_experiences_json, name="get_projects_json"),
     path("experience/<uuid:experience_id>/delete/", delete_experience, name="delete_experience"),
+    path("experience/<uuid:experience_id>/edit/", edit_experience, name="edit_experience"),
 
     path("education/", show_education, name="show_education"),
     path("education/add/", create_education, name="create_education"),
-    path("education/<uuid:education_id>/delete/", delete_education, name="delete_education"),
     path("api/education/", get_educations_json, name="get_educations_json"),
+    path("education/<uuid:education_id>/delete/", delete_education, name="delete_education"),
+    path("education/<uuid:education_id>/edit/", edit_education, name="edit_education"),
 
 ]

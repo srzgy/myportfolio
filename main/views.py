@@ -73,6 +73,17 @@ def delete_experience(request, experience_id):
 
     return redirect("main_show_experience")
 
+def edit_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_experience')
+
+    context = {'form': form, 'name': 'Deandra Yudasswara'}
+    return render(request, "experience_edit.html", context)
+
 
 def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
@@ -138,3 +149,14 @@ def delete_education(request, education_id):
         return redirect("main:show_education")
 
     return redirect("main:show_education")
+
+def edit_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+    form = EducationForm(request.POST or None, instance=education)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_education')
+
+    context = {'form': form, 'name': 'Deandra Yudasswara'}
+    return render(request, "education_edit.html", context)
