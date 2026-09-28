@@ -55,3 +55,9 @@ Other than that, I also asked Gemini for help understanding how Django MVT works
 
 ### Tugas 3 AI Usage
 For this assignment, I used Gemini as a coding mentor to help me properly structure the layout and resolve CSS conflicts. Specifically, Gemini helped me use object-fit: cover to standardize image dimensions across my cards, fix a mobile responsiveness issue in the header using CSS media queries, and debug my edit_education view when I accidentally queried the wrong model.
+
+
+### Tugas 4 AI Usage
+For this assignment, I fully completed the tutorial 4 without any AI assistance, following each step meticulously. However, I had to go through a CSS problem, where it seems that a style.css file from a completely different and irrelevant directory became the source for base.html. Had to ask Gemini for help regarding this, making me realize that I needed to check the css source code when I ran the server and see whether the source code is identical to the one i have for myportfolio. Hence, I renamed my style.css file into style_srzgy.css so that nothing gets entangled.
+
+However, I did use AI to finish up the only thing in the assignment that I think wasn't in the tutorial, which was to create the 'Editors' role through localhost:8000/admin. Was completely unfamiliar with that, so yeah.
