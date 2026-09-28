@@ -91,7 +91,11 @@ def delete_experience(request, experience_id):
 
     return redirect("main_show_experience")
 
+@login_required(login_url="/login/")
 def edit_experience(request, experience_id):
+    if not (request.user.is_superuser or request.user.has_perm('main.change_experience')):
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
 
