@@ -590,6 +590,7 @@ h1, .brand {
 /* --- star button --- */
 .star-form {
     display: inline;
+    background: var(--paper);
 }
 
 .button-star {

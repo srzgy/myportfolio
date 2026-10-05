@@ -22,7 +22,7 @@
                     {% endif %}
                 </div>
 
-                <button class="button button-secondary" onclick="showToast('System Notification', 'Project loaded successfully!', 'success')">
+                <button class="button button-secondary" onclick="showToast('System Notification', 'Experience loaded successfully!', 'success')">
                     Test Toast Notification
                 </button>
 
@@ -108,7 +108,7 @@ function buildExperienceCardElement(item) {
     articleElement.className = 'experience-card';
 
     const imageHtml = experience.thumbnail
-        ? `<img src="${escapeHtml(experience.thumbnail)}" alt="Image of ${escapeHtml(experience.title)}" class="project-image">`
+        ? `<img src="${escapeHtml(experience.thumbnail)}" alt="Image of ${escapeHtml(experience.title)}" class="experience-image">`
         : '';
     
     // A dummy UUID used as a placeholder to be replaced with the real ID from the JSON data
@@ -176,7 +176,7 @@ function buildExperienceCardElement(item) {
     return articleElement;
 }
 
-// fetch project data
+// fetch experience data
 async function fetchExperiences(searchQuery = "") {
     if (experiencesAbortController) experiencesAbortController.abort();
     experiencesAbortController = new AbortController();

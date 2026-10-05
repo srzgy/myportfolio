@@ -155,30 +155,59 @@ def get_educations_json(request):
     title_query = request.GET.get("institution", "").strip()
     educations = Education.objects.all()
 
-    # filtering by institution name
     if title_query:
         educations = educations.filter(institution__icontains=title_query)
 
-    educations_json = serializers.serialize("json", educations)
-    return HttpResponse(educations_json, content_type="application/json")
+    # manually building the json
+    data = []
+    for edu in educations:
+        starred_users = edu.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+        data.append({
+            "pk": str(edu.id),
+            "fields": {
+                "institution": edu.institution,
+                "degree": edu.degree,
+                "description": edu.description,
+                "thumbnail": edu.thumbnail if edu.thumbnail else "",
+                "is_ongoing": edu.is_ongoing,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+    
+    return JsonResponse(data, safe=False)
 
 
 def show_education(request):
-    json_response = get_educations_json(request)
-
-    educations = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    educations = [education.object for education in educations]
     title_query = request.GET.get("institution", "").strip()
 
     context = {
         "name": "Deandra Yudasswara",
-        "education_list": educations,
         "title_query": title_query,
+        "form": EducationForm(),
     }
     return render(request, "education.html", context)
+
+@require_POST
+def create_education_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only srzgy can add education."},
+            status=403,
+        )
+
+    form = EducationForm(request.POST)
+    if form.is_valid():
+        education = form.save()
+        return JsonResponse(
+            {"message": "Education added successfully.", "pk": str(education.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 def create_education(request):
@@ -206,7 +235,12 @@ def delete_education(request, education_id):
 
     return redirect("main:show_education")
 
+
+@login_required(login_url="/login/")
 def edit_education(request, education_id):
+    if not (request.user.is_superuser or request.user.has_perm('main.change_education')):
+        raise PermissionDenied
+    
     education = get_object_or_404(Education, pk=education_id)
     form = EducationForm(request.POST or None, instance=education)
 
@@ -264,6 +298,18 @@ def toggle_star(request, experience_id):
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experience")
+
+@login_required(login_url="/login/")
+def toggle_star_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        if request.user in education.starred_by.all():
+            education.starred_by.remove(request.user)
+        else:
+            education.starred_by.add(request.user)
+
+    return redirect("main:show_education")
 
 
 
