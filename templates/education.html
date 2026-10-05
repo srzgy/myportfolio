@@ -119,6 +119,7 @@ function buildEducationCardElement(item) {
     
     const isStarredClass = education.is_starred ? " is-starred" : "";
     const starText = education.is_starred ? "Unstar" : "Star";
+    const starIcon = education.is_starred ? "★" : "☆";
     const starTitle = education.star_count > 0 
         ? `Starred by ${escapeHtml(education.starred_by_names)}` 
         : "Be the first to star";
@@ -153,7 +154,7 @@ function buildEducationCardElement(item) {
                     <button type="submit"
                             class="button button-star${isStarredClass}"
                             title="${starTitle}">
-                        <span aria-hidden="true">★</span>
+                        <span aria-hidden="true">${starIcon}</span>
                         ${starText}
                         <span class="star-count">${education.star_count}</span>
                     </button>

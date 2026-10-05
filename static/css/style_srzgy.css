@@ -597,18 +597,27 @@ h1, .brand {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    background: var(--ink);
+    background: var(--ink) !important;
+    color: var(--paper) !important;
+    border: 1px solid var(--ink);
 }
 
 .button-star.is-starred {
-    background: var(--accent);
+    background: var(--accent) !important;
+    color: var(--ink) !important;
+    border: 1px solid var(--accent);
 }
 
-.star-count {
+.button-star .star-count {
     padding: 0.05rem 0.4rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.1);
     font-size: 0.8rem;
+    color: inherit;
+}
+
+.button-star.is-starred .star-count {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 
