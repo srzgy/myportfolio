@@ -61,3 +61,23 @@ For this assignment, I used Gemini as a coding mentor to help me properly struct
 For this assignment, I fully completed the tutorial 4 without any AI assistance, following each step meticulously. However, I had to go through a CSS problem, where it seems that a style.css file from a completely different and irrelevant directory became the source for base.html. Had to ask Gemini for help regarding this, making me realize that I needed to check the css source code when I ran the server and see whether the source code is identical to the one i have for myportfolio. Hence, I renamed my style.css file into style_srzgy.css so that nothing gets entangled.
 
 However, I did use AI to finish up the only thing in the assignment that I think wasn't in the tutorial, which was to create the 'Editors' role through localhost:8000/admin. Was completely unfamiliar with that, so yeah.
+
+
+### Tugas 5 Reflective Questions
+1. Explain what debouncing is and why this technique is important to implement in a search feature that uses AJAX.
+
+    So, debouncing is basically a way to tell our code to "hold on a sec" before firing off an action. In an AJAX search feature, if we didn't use debouncing, the browser would send a brand new fetch request to the server for every single letter we type. If I type "Tottenham", that's 9 separate server requests in  two seconds. That would completely spam and overwhelm the server. By implementing debouncing (using setTimeout), we force the browser to wait until I actually stop typing for a set amount of time (like 300 milliseconds) before it finally sends one single AJAX request. It's just way more efficient and keeps the server from crashing under pressure.
+
+2. Explain the purpose of using await when we use fetch(). What would happen if we did not use await?
+
+    The purpose of using await with fetch() is to pause the execution of that specific JavaScript function until the server actually replies with our data. Fetching data across the internet takes time, and JavaScript is impatient; usually just wants to keep running the next lines of code immediately. If we didn't use await, JavaScript would run the fetch() request and instantly move on to the next line before the JSON data even arrives. We'd end up trying to render our experience cards with an empty or "undefined" response, which would just break the UI entirely. await basically forces the code to chill out and wait for the Promise to resolve before moving forward.
+
+3. Explain what a Cross-Site Scripting (XSS) attack is and why data displayed through AJAX JavaScript is more vulnerable to this attack than data displayed directly through a Django template.
+
+    An XSS (Cross-Site Scripting) attack is basically when some random dude sneaks dangerous JavaScript code into our database—like putting a <script> tag inside an "Experience Title" input. When other users view that page, their browser reads the malicious code and executes it, which could steal their session cookies or mess up their account.
+    
+    Data displayed through AJAX is more vulnerable because when we use normal JavaScript to manually inject HTML (using something like innerHTML), the browser just blindly trusts and runs whatever tags are in that string. Django templates, on the other hand, have built-in auto-escaping. If you try to render a script tag in a standard Django {{ variable }}, Django acts like a security guard and automatically converts the brackets into harmless text thingies (like &lt; and &gt;) before it ever hits the browser. When using AJAX, we have to manually build that security guard ourselves using an escapeHtml() function.
+
+# Tugas 5 AI Usage
+
+    For this assignment, since I followed the tutorial thorougly to upgrade my Experience section, I feel like I understood what to do when mirroring the exact same upgrade (across Tugas 4 and Tugas 5 things) for my Education section. I still used Gemini to make sure that my code for the Education section mirrors perfectly with my tutorial-based Experience section. The problem I had to face though, was a CSS problem where for the unstarred button in an experience/education card, the colors were all white so they overlapped and the stars, the text, and the number who starred the card, it was all unreadable. I had to ask gemini for help regarding the priority css styling, but I feel like at some point it was also a css cache issue, because the readability was solved once I opened up a fresh google chrome window to open up localhost (i used opera gx mainly, then edge secondarily)
