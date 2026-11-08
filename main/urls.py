@@ -1,15 +1,14 @@
 from django.urls import path
 
 from main.views import (
-    show_main, 
+    show_main,
     show_experience,
-    show_education, 
+    show_education,
     create_experience,
-    create_experience_ajax, 
-    get_experiences_json, 
+    create_experience_ajax,
+    get_experiences_json,
     delete_experience,
     edit_experience,
-    show_education,
     create_education,
     create_education_ajax,
     delete_education,
@@ -29,7 +28,7 @@ urlpatterns = [
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
-    
+
     path("experience/", show_experience, name="show_experience"),
     path("experience/add/", create_experience, name="create_experience"),
     path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
@@ -45,5 +44,4 @@ urlpatterns = [
     path("education/<uuid:education_id>/delete/", delete_education, name="delete_education"),
     path("education/<uuid:education_id>/edit/", edit_education, name="edit_education"),
     path("education/<uuid:education_id>/star/", toggle_star_education, name="toggle_star_education"),
-
 ]

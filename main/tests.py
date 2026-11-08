@@ -36,26 +36,30 @@ class ExperienceTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Fasilkom UI")
-        self.assertContains(response, "Ongoing")
+        self.assertContains(response, reverse("api:experience-list"))
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+        api_response = self.client.get(reverse("api:experience-list"))
+        self.assertEqual(api_response.status_code, 200)
+        self.assertEqual(api_response.data[0]["title"], self.experience.title)
+        self.assertEqual(api_response.data[0]["description"], self.experience.description)
+        self.assertEqual(api_response.data[0]["category"], "Fasilkom UI")
+        self.assertTrue(api_response.data[0]["is_ongoing"])
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "No experiences added yet.")
+        self.assertContains(response, "No experiences have been added or found yet.")
 
     def test_completed_experience(self):
         self.experience.ended_at = timezone.now()
         self.experience.save()
-        response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Completed")
-        self.assertNotContains(response, "Ongoing")
+        api_response = self.client.get(reverse("api:experience-list"))
+        self.assertFalse(api_response.data[0]["is_ongoing"])
+
 
 class EducationTest(TestCase):
     def setUp(self):
@@ -72,12 +76,16 @@ class EducationTest(TestCase):
 
     def test_education_page_contains_data(self):
         response = self.client.get(reverse("main:show_education"))
-        self.assertContains(response, "Universitas Indonesia")
-        self.assertContains(response, "S1 Ilmu Komputer")
-        self.assertContains(response, "Ongoing")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse("api:education-list"))
+
+        api_response = self.client.get(reverse("api:education-list"))
+        self.assertEqual(api_response.status_code, 200)
+        self.assertEqual(api_response.data[0]["institution"], "Universitas Indonesia")
+        self.assertEqual(api_response.data[0]["degree"], "S1 Ilmu Komputer")
+        self.assertTrue(api_response.data[0]["is_ongoing"])
 
     def test_empty_education_page(self):
         Education.objects.all().delete()
         response = self.client.get(reverse("main:show_education"))
-        self.assertContains(response, "No education history added yet.")
-    
+        self.assertContains(response, "No education history added or found yet.")

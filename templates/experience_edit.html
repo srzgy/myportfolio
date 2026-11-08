@@ -7,7 +7,8 @@
         <section class="experience-section">
             <div class="container">
                 <h1>Edit Experience</h1>
-                <form method="post"
+                <form id="edit-experience-form"
+                      method="post"
                       class="experience-form">
                     {% csrf_token %}
                     {% for field in form %}
@@ -25,4 +26,56 @@
             </div>
         </section>
     </main>
+
+<script>
+const DETAIL_EXPERIENCE_ENDPOINT = "{% url 'api:experience-detail' experience.id %}";
+const REDIRECT_URL = "{% url 'main:show_experience' %}";
+const editForm = document.getElementById('edit-experience-form');
+
+function getCookie(name) {
+    const prefix = `${name}=`;
+    const cookie = document.cookie.split(';').map(value => value.trim())
+        .find(value => value.startsWith(prefix));
+    return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+}
+
+function apiErrorMessage(data, status) {
+    const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+    return messages.join(' ') || `Request failed (HTTP ${status}).`;
+}
+
+editForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const submitButton = editForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+
+    try {
+        const fields = new FormData(editForm);
+        const payload = {
+            title: fields.get('title'),
+            description: fields.get('description'),
+            category: fields.get('category'),
+            thumbnail: fields.get('thumbnail') || "",
+        };
+
+        const response = await fetch(DETAIL_EXPERIENCE_ENDPOINT, {
+            method: 'PATCH',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+
+        window.location.href = REDIRECT_URL;
+    } catch (error) {
+        showToast('Failed to update experience', error.message, 'error');
+        submitButton.disabled = false;
+    }
+});
+</script>
 {% endblock content %}

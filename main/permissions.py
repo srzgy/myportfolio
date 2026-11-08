@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+
 class IsPortfolioOwnerOrReadOnly(BasePermission):
     message = "Only the portfolio owner can change education entries."
 
@@ -9,6 +10,7 @@ class IsPortfolioOwnerOrReadOnly(BasePermission):
             or request.user.is_superuser
         )
 
+
 class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
@@ -17,11 +19,13 @@ class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
             return False
         if request.user.is_superuser:
             return True
-        
-        # allows PUT/PATCH if the user has the specific change permission
+
+        perm = (
+            "main.change_experience"
+            if "experience" in request.path
+            else "main.change_education"
+        )
         return (
             request.method in ("PUT", "PATCH")
-            and request.user.has_perm("main.change_education")
+            and request.user.has_perm(perm)
         )
-    
-    
