@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-b5-7$5##2w$2&)vq4sg07!6i8d(^ml=7^*!%o+obi4ic)fatye
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "deandra-sulthan-myportfolio.pws.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "10.0.2.2", "deandra-sulthan-myportfolio.pws.cs.ui.ac.id"]
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
@@ -44,11 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'main',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -158,3 +161,18 @@ MAILERS = {
 
 # Form implementation
 CSRF_TRUSTED_ORIGINS = ["https://deandra-sulthan-myportfolio.pws.cs.ui.ac.id"]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
+
+CORS_ALLOW_ALL_ORIGINS = not PRODUCTION
+if PRODUCTION:
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
