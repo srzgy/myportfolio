@@ -49,11 +49,22 @@ class EducationAPITest(APITestCase):
         self.assertEqual(self.client.get(url).status_code, status.HTTP_404_NOT_FOUND)
 
     def test_guest_and_visitor_cannot_write(self):
-        for user in (None, self.visitor):
+        for user, expected_status in ((None, 401), (self.visitor, 403)):
             self.client.force_authenticate(user=user)
-            self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, 403)
-            self.assertEqual(self.client.patch(self.detail_url, {"institution": "Changed"}, format="json").status_code, 403)
-            self.assertEqual(self.client.delete(self.detail_url).status_code, 403)
+            self.assertEqual(
+                self.client.post(self.list_url, self.payload, format="json").status_code,
+                expected_status,
+            )
+            self.assertEqual(
+                self.client.patch(
+                    self.detail_url, {"institution": "Changed"}, format="json"
+                ).status_code,
+                expected_status,
+            )
+            self.assertEqual(
+                self.client.delete(self.detail_url).status_code,
+                expected_status,
+            )
 
         self.assertEqual(Education.objects.count(), 1)
         self.education.refresh_from_db()
@@ -97,7 +108,7 @@ class EducationAPITest(APITestCase):
         self.assertFalse(Education.objects.filter(pk=self.education.id).exists())
 
     def test_star_requires_login_and_toggles(self):
-        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_401_UNAUTHORIZED)
         self.client.force_authenticate(user=self.visitor)
 
         response = self.client.post(self.star_url)
@@ -203,11 +214,22 @@ class ExperienceAPITest(APITestCase):
         self.assertEqual(self.client.get(url).status_code, status.HTTP_404_NOT_FOUND)
 
     def test_guest_and_visitor_cannot_write(self):
-        for user in (None, self.visitor):
+        for user, expected_status in ((None, 401), (self.visitor, 403)):
             self.client.force_authenticate(user=user)
-            self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, 403)
-            self.assertEqual(self.client.patch(self.detail_url, {"title": "Changed"}, format="json").status_code, 403)
-            self.assertEqual(self.client.delete(self.detail_url).status_code, 403)
+            self.assertEqual(
+                self.client.post(self.list_url, self.payload, format="json").status_code,
+                expected_status,
+            )
+            self.assertEqual(
+                self.client.patch(
+                    self.detail_url, {"title": "Changed"}, format="json"
+                ).status_code,
+                expected_status,
+            )
+            self.assertEqual(
+                self.client.delete(self.detail_url).status_code,
+                expected_status,
+            )
 
         self.assertEqual(Experience.objects.count(), 1)
         self.experience.refresh_from_db()
@@ -251,7 +273,7 @@ class ExperienceAPITest(APITestCase):
         self.assertFalse(Experience.objects.filter(pk=self.experience.id).exists())
 
     def test_star_requires_login_and_toggles(self):
-        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_401_UNAUTHORIZED)
         self.client.force_authenticate(user=self.visitor)
 
         response = self.client.post(self.star_url)
@@ -312,3 +334,60 @@ class ExperienceAPITest(APITestCase):
             self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+
+class TokenAuthAPITest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_superuser(
+            username="owner", password="test-password", email="owner@example.com",
+        )
+        self.token_url = reverse("api:api_token_auth")
+        self.logout_url = reverse("api:api_logout")
+        self.experience_list_url = reverse("api:experience-list")
+        self.payload = {
+            "title": "Token Created Experience",
+            "description": "Created using DRF TokenAuthentication",
+            "category": "Fasilkom UI",
+            "thumbnail": "https://example.com/image.jpg",
+        }
+
+    def test_token_login_create_and_logout_flow(self):
+        token_response = self.client.post(
+            self.token_url,
+            {"username": "owner", "password": "test-password"},
+            format="json",
+        )
+        self.assertEqual(token_response.status_code, status.HTTP_200_OK)
+        self.assertIn("token", token_response.data)
+        token = token_response.data["token"]
+
+        invalid_response = self.client.post(
+            self.experience_list_url,
+            self.payload,
+            format="json",
+            HTTP_AUTHORIZATION="Token invalid-token",
+        )
+        self.assertEqual(invalid_response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        create_response = self.client.post(
+            self.experience_list_url,
+            self.payload,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+
+        logout_response = self.client.post(
+            self.logout_url,
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        self.assertEqual(logout_response.status_code, status.HTTP_204_NO_CONTENT)
+
+        reused_response = self.client.post(
+            self.experience_list_url,
+            self.payload,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        self.assertEqual(reused_response.status_code, status.HTTP_401_UNAUTHORIZED)
